@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="../images/CSS_Pin_ipad.png">
+    <title>UofR Campus GIS - Tree Map</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.4/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.4/esri/css/main.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>
+    <script src="https://js.arcgis.com/4.4/"></script>
+    <script src="treeMap.js"></script>
+    <link rel="stylesheet" href="treeMap.css">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="navbarContent">
+            <a href="#home" class="navbarButton">University of Redlands - Campus Tree Explorer</a>
+            <!-- Right-sided navbar links. Hide them on small screens -->
+            <!-- <div class="w3-right w3-hide-small">
+            <a href="#about" class="w3-bar-item w3-button">About</a>
+            <a href="#menu" class="w3-bar-item w3-button">Menu</a>
+            <a href="#contact" class="w3-bar-item w3-button">Contact</a>
+          </div> -->
+        </div>
+    </header>
+    <div id="mapView"></div>
+    <div id="dashboard"></div>
+    <div id="infoPanel">
+        <div id="infoHeader">Species Information<img id="closeButton" src="../images/close.png" alt="Close"></div>
+        <div id="speciesInfo">
+            <span id="infoComName">Common Name</span><br>
+            <span id="infoSciName">Scientific Name</span><br>
+            <div id="infoPhoto"></div>
+            <div id="infoDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sit amet ornare purus. Mauris eget sem ut tortor faucibus eleifend sit amet vitae enim. Donec faucibus euismod mauris ut placerat. Nam aliquet malesuada orci vitae eleifend.
+                Sed mattis pretium leo eu venenatis. Aenean elementum orci non pharetra mollis. Etiam consequat nibh eget velit congue consectetur vel vitae augue. Morbi nulla est, sagittis quis nulla ut, varius mollis neque. Cras luctus diam ac dignissim
+                ultrices. Nunc rhoncus commodo tellus. Donec risus arcu, pharetra eget faucibus et, accumsan ornare risus. Suspendisse rutrum sem nec massa tincidunt vulputate. Aliquam imperdiet risus quis neque convallis scelerisque. Aenean pellentesque
+                turpis sed ex consequat imperdiet.</div>
+
+        </div>
+
+    </div>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            <!-- <div class="swiper-slide">Slide 1</div>
+            <div class="swiper-slide">Slide 2</div>
+            <div class="swiper-slide">Slide 3</div> -->
+
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+        <!-- <div class="swiper-scrollbar"></div> -->
+        <!-- <div class="swiper-pagination"></div> -->
+    </div>
+</body>
+
+</html>

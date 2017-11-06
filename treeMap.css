@@ -1,0 +1,190 @@
+html,
+body {
+    margin: 0px;
+}
+
+.navbar {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.navbarContent {
+    letter-spacing: 4px;
+    color: #7a2426!important;
+    background-color: #edf2f6!important;
+    padding: 8px 16px!important;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    width: 100%;
+    overflow: hidden;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+*/ .navbarContent:before,
+.navbarContent:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.navbarButton {
+    padding: 8px 16px;
+    float: left;
+    width: auto;
+    border: none;
+    outline: none;
+    display: block;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: none;
+    display: inline-block;
+    outline: 0;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: inherit;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+#mapView {
+    top: 50px;
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    height: auto;
+    /* width: 100%; */
+    left: 0px;
+    right: 0px;
+    background-color: green;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+#mapView.info {
+    right: 300px;
+}
+
+#infoPanel {
+    background-color: #fff!important;
+    color: black;
+    position: fixed;
+    top: 50px;
+    right: -320px;
+    width: 300px;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+#infoPanel.slideout {
+    right: 0;
+}
+
+#infoHeader {
+    font-size: larger;
+    padding: 5px;
+}
+
+#speciesInfo {
+    padding: 0px 8px;
+}
+
+#infoComName {
+    font-size: larger;
+    font-weight: bold;
+}
+
+#infoSciName {
+    font-style: italic;
+}
+
+#infoDesc {
+    /* position: absolute; */
+    overflow-y: scroll;
+}
+
+#infoPhoto {
+    height: 213px;
+    background-position: top;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#closeButton {
+    float: right;
+    height: 18px;
+    cursor: pointer;
+}
+
+#dashboard {
+    background-color: pink;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+}
+
+.treeInfo {
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
+    /* IE6-9 */
+    color: white;
+    font-size: large;
+    padding: 8px 12px 50px;
+    cursor: pointer;
+}
+
+.swiper-container {
+    bottom: 0px;
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    height: 25%;
+    width: 100%;
+    background-color: white;
+}
+
+.swiper-slide {
+    background-position: top;
+    background-size: cover;
+    width: 400px;
+    height: 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.selected {
+    border-style: solid;
+    border-width: 3px;
+    border-color: rgba(255, 255, 0, .7);
+    ;
+}
+
+
+/* .swiper-wrapper{
+      width:100%;
+      height: 100%;
+  } */
