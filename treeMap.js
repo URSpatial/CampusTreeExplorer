@@ -4,6 +4,7 @@ var treelayer;
 var timeoutID;
 var mySwiper;
 var slideIndex = {};
+var speciesBios = {};
 require([
         "esri/Map",
         "esri/views/MapView",
@@ -18,10 +19,12 @@ require([
         "esri/geometry/Point",
         "esri/symbols/SimpleMarkerSymbol",
         "esri/Viewpoint",
+        "esri/tasks/QueryTask",
+        "esri/tasks/support/Query",
         "dojo/domReady!"
     ],
 
-    function(Map, MapView, FeatureLayer, Extent, SpatialReference, BasemapToggle, Home, Track, GraphicsLayer, Graphic, Point, SimpleMarkerSymbol, Viewpoint) {
+    function(Map, MapView, FeatureLayer, Extent, SpatialReference, BasemapToggle, Home, Track, GraphicsLayer, Graphic, Point, SimpleMarkerSymbol, Viewpoint, QueryTask, Query) {
 
         // new $.fn.dataTable.FixedHeader( table );
         $("#mapView").css("bottom", $(".swiper-container").height())
@@ -38,7 +41,7 @@ require([
 
         highlightLayer = new GraphicsLayer();
         treeLayer = new FeatureLayer({
-            url: "http://services.arcgis.com/o6oETlrWetREI1A2/arcgis/rest/services/UR_TreeInventory/FeatureServer/0",
+            url: "https://urspatial.redlands.edu/ags/rest/services/CampusTrees/FeatureServer/0",
             outFields: ["*"]
         });
         map.add(highlightLayer);
@@ -61,7 +64,7 @@ require([
 
                 return treeLayer.queryFeatures(query);
             });
-        }).then(getSpecies).then(initializeSwiper);
+        }).then(getSpecies).then(initializeSwiper).then(getBios);
 
         // 1 - Create the widget
         var toggle = new BasemapToggle({
@@ -142,7 +145,7 @@ require([
                         maxY = feature.geometry.latitude
                     }
                 }
-                var treeExtent = new Extent({ xmin: minX, ymin: minY, xmax: maxX, ymax: maxY, spatialReference: features[0].geometry.spatialReference.wkid });
+                var treeExtent = new Extent({ xmin: minX, ymin: minY, xmax: maxX, ymax: maxY, spatialReference: 4326 });
                 mapView.goTo(treeExtent.expand(4)).then(function() {
                     if (mapView.zoom > 19) {
                         mapView.zoom = 19;
@@ -158,13 +161,29 @@ require([
                 graphic.symbol = new SimpleMarkerSymbol({
                     style: "circle",
                     size: 12,
-                    color: [255, 255, 0, .7]
+                    color: [255, 255, 0, .8]
                 });
                 return graphic;
             });
             highlightLayer.addMany(features);
 
             //mapView.goTo(features);
+
+
+        }
+
+        function getBios(response) {
+            var queryBios = new QueryTask({
+                url: "https://urspatial.redlands.edu/ags/rest/services/CampusTrees/FeatureServer/1"
+            });
+            var query = new Query();
+            query.where = "1=1";
+            queryBios.execute(query).then(function(result) {
+                for (i = 0; i < result.features.length; i++) {
+                    speciesBios[result.features[i].attributes.CommonName] = result.features[i].attributes;
+                }
+
+            });
 
 
         }
@@ -261,7 +280,20 @@ require([
         function fillInfo(scientific, common) {
             $("#infoComName").text(common);
             $("#infoSciName").text(scientific);
-            var imgURL = "photos/thumbs/" + common.replace(" ", "") + ".jpg";
+            var bio = "";
+            if (typeof(speciesBios[common]) != "undefined") {
+                bio = speciesBios[common].Bio;
+                $("#infoDesc").text(bio);
+                if (speciesBios[common].MoreInfo != null && speciesBios[common].MoreInfo != "") {
+                    $("#infoDesc").append("<br><a href='" + speciesBios[common].MoreInfo + "' data-lity>Click here for more info</a>");
+                }
+                $("#infoDesc").show();
+            } else {
+                $("#infoDesc").hide();
+            }
+
+
+            var imgURL = "photos/thumbs/" + replaceAll(common, " ", "") + ".jpg";
             var img = new Image();
             img.onload = function() {
                 $("#infoPhoto").css("background-image", "url(" + imgURL + ")");
@@ -321,7 +353,7 @@ function hideInfoPanel() {
     $("#infoPanel").removeClass("slideout");
     $("#mapView").removeClass("info");
     highlightLayer.removeAll();
-    treeLayer.opacity = 0.6;
+    treeLayer.opacity = .9;
 }
 
 function replaceAll(str, find, replace) {
