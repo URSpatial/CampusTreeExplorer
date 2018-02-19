@@ -51,7 +51,10 @@ require([
         // Create the MapView and reference the Map in the instance
         mapView = new MapView({
             container: "mapView",
-            map: map
+            map: map,
+            constraints: {
+                rotationEnabled: false
+            }
         });
         //mapView.center = [-13042637, 4037324];
         mapView.center = [-117.164673, 34.063830];
