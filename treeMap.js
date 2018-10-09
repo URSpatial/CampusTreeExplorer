@@ -41,7 +41,7 @@ require([
 
         highlightLayer = new GraphicsLayer();
         treeLayer = new FeatureLayer({
-            url: "https://urspatial.redlands.edu/ags/rest/services/CampusTrees/FeatureServer/0",
+            url: "https://geosrv.redlands.edu/ags/rest/services/Campus/Trees/FeatureServer/0",
             outFields: ["*"]
         });
         map.add(highlightLayer);
@@ -177,7 +177,7 @@ require([
 
         function getBios(response) {
             var queryBios = new QueryTask({
-                url: "https://urspatial.redlands.edu/ags/rest/services/CampusTrees/FeatureServer/1"
+                url: "https://geosrv.redlands.edu/ags/rest/services/Campus/Trees/FeatureServer/1"
             });
             var query = new Query();
             query.where = "1=1";
