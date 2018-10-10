@@ -42,7 +42,7 @@ require([
         highlightLayer = new GraphicsLayer();
         treeLayer = new FeatureLayer({
             url: "https://geosrv.redlands.edu/ags/rest/services/Campus/Trees/FeatureServer/0",
-            outFields: ["*"]
+            outFields: ["Category", "CommonName", "CanopySize", "DBH", "Height", "ScientificName", "SpeciesCode", "Tree_Type", "Tagged", "Comments", "SurveyDate"]
         });
         map.add(highlightLayer);
         map.add(treeLayer);
@@ -63,7 +63,7 @@ require([
             return treeLayer.then(function() {
                 var query = treeLayer.createQuery();
                 query.where = "NOT CommonName is null"
-                query.outFields = ["CityManaged", "Comments", "SurveyDate", "SpeciesCode", "ScientificName", "CommonName", "Tree_Type", "SppValueAssignment", "Height", "CanopySize", "SpeciesType"];
+                query.outFields = ["Category", "CommonName", "CanopySize", "DBH", "Height", "ScientificName", "SpeciesCode", "Tree_Type", "Tagged", "Comments", "SurveyDate"];
 
                 return treeLayer.queryFeatures(query);
             });
@@ -181,6 +181,7 @@ require([
             });
             var query = new Query();
             query.where = "1=1";
+            query.outFields = ["*"];
             queryBios.execute(query).then(function(result) {
                 for (i = 0; i < result.features.length; i++) {
                     speciesBios[result.features[i].attributes.CommonName] = result.features[i].attributes;
