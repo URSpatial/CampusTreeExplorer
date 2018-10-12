@@ -5,8 +5,10 @@ var timeoutID;
 var mySwiper;
 var slideIndex = {};
 var speciesBios = {};
+var photoLayer;
 require([
         "esri/Map",
+        "esri/Basemap",
         "esri/views/MapView",
         "esri/layers/FeatureLayer",
         "esri/geometry/Extent",
@@ -21,18 +23,35 @@ require([
         "esri/Viewpoint",
         "esri/tasks/QueryTask",
         "esri/tasks/support/Query",
+        "esri/layers/TileLayer",
         "dojo/domReady!"
     ],
 
-    function(Map, MapView, FeatureLayer, Extent, SpatialReference, BasemapToggle, Home, Track, GraphicsLayer, Graphic, Point, SimpleMarkerSymbol, Viewpoint, QueryTask, Query) {
+    function(Map, Basemap, MapView, FeatureLayer, Extent, SpatialReference, BasemapToggle, Home, Track, GraphicsLayer, Graphic, Point, SimpleMarkerSymbol, Viewpoint, QueryTask, Query, TileLayer) {
 
         // new $.fn.dataTable.FixedHeader( table );
         $("#mapView").css("bottom", $(".swiper-container").height())
         $("#infoPanel").height($("#mapView").height());
         $("#infoDesc").height($(".swiper-container").offset().top - $("#infoDesc").offset().top);
+
+        var CampusBase = new Basemap({
+            title: 'Campus Basemap',
+            id: "CampusBase",
+            thumbnailUrl: 'https://js.arcgis.com/3.22/esri/images/basemap/topo.jpg',
+            //itemId: 'ulas',
+            baseLayers: [new TileLayer({ url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer" }),
+                new TileLayer({
+                    url: "https://geosrv.redlands.edu/ags/rest/services/Campus/CampusBasemap/MapServer"
+                }),
+                new TileLayer({
+                    url: "https://geosrv.redlands.edu/ags/rest/services/Campus/BuildingLabels/MapServer"
+                })
+            ]
+        });
+
         // Create the Map with an initial basemap
         var map = new Map({
-            basemap: "satellite"
+            basemap: CampusBase
         });
         // startExtent = new Extent(-13043147, 4036899, -13042121,
         //     4037754, new SpatialReference({
@@ -44,9 +63,20 @@ require([
             url: "https://geosrv.redlands.edu/ags/rest/services/Campus/Trees/FeatureServer/0",
             outFields: ["Category", "CommonName", "CanopySize", "DBH", "Height", "ScientificName", "SpeciesCode", "Tree_Type", "Tagged", "Comments", "SurveyDate"]
         });
-        map.add(highlightLayer);
-        map.add(treeLayer);
+        photoLayer = new FeatureLayer({
+            url: "https://geosrv.redlands.edu/ags/rest/services/Campus/Photos/FeatureServer/0",
 
+            outFields: ["*"],
+            visible: true,
+            id: "Photos",
+            definitionExpression: "Tags LIKE '%Tree%'"
+        });
+        photoLayer.opacity = .9;
+
+        map.add(highlightLayer);
+
+        map.add(treeLayer);
+        map.add(photoLayer);
 
         // Create the MapView and reference the Map in the instance
         mapView = new MapView({
@@ -54,11 +84,16 @@ require([
             map: map,
             constraints: {
                 rotationEnabled: false
-            }
+            },
+            spatialReference: {
+                wkid: 102100
+            },
+            center: [-117.16423259933816, 34.063486475883636]
         });
-        //mapView.center = [-13042637, 4037324];
-        mapView.center = [-117.164673, 34.063830];
-        mapView.zoom = 16;
+        mapView.constraints.snapToZoom = false;
+        //mapView.center = [-13042550, 4037322];
+        // mapView.center = [-117.164673, 34.063830];
+        mapView.scale = 7000;
         mapView.then(function() {
             return treeLayer.then(function() {
                 var query = treeLayer.createQuery();
@@ -73,7 +108,7 @@ require([
         var toggle = new BasemapToggle({
             // 2 - Set properties
             view: mapView, // view that provides access to the map's 'topo' basemap
-            nextBasemap: "topo" // allows for toggling to the 'hybrid' basemap
+            nextBasemap: "satellite" // allows for toggling to the 'hybrid' basemap
         });
 
         // Add widget to the top right corner of the view
@@ -93,24 +128,41 @@ require([
                 .then(function(response) {
                     // do something with the result graphic
                     var graphic = response.results[0].graphic;
-                    var comName = graphic.attributes.CommonName;
-                    var sciName = graphic.attributes.ScientificName;
-                    selectSpecies(sciName, comName, false);
-                    if (typeof(slideIndex[comName]) != "undefined") {
-                        mySwiper.slideTo(slideIndex[comName]);
-                        // $(".selected").removeClass("selected");
-                        // $(".swiper-slide[data-comName='" + comName + "']").addClass("selected");
+                    if (graphic.layer.id == "Photos") {
+                        var file = graphic.attributes.filename;
+                        var spaceid = graphic.attributes.spaceid;
+                        var lightbox;
+                        lightbox = lity("https://urspatial.redlands.edu/rmap/panoViewer.html?photo=" + file);
+                        // if (spaceid != null) {
+                        //     lightbox = lity("../panoViewer.html?photo=" + file + "&spaceid=" + spaceid);
+                        // } else {
+                        //     lightbox = lity("../panoViewer.html?photo=" + file);
+                        // }
 
+                        response.stopPropagation();
+                    } else {
+
+
+                        var comName = graphic.attributes.CommonName;
+                        var sciName = graphic.attributes.ScientificName;
+                        selectSpecies(sciName, comName, false);
+                        if (typeof(slideIndex[comName]) != "undefined") {
+                            mySwiper.slideTo(slideIndex[comName]);
+                            // $(".selected").removeClass("selected");
+                            // $(".swiper-slide[data-comName='" + comName + "']").addClass("selected");
+
+                        }
+                        var vpoint = new Viewpoint({
+                            targetGeometry: response.screenPoint.mapPoint,
+                            scale: 564
+                        });
+                        mapView.goTo(vpoint);
+                        console.log(comName + " - " + slideIndex[comName])
                     }
-                    var vpoint = new Viewpoint({
-                        targetGeometry: response.screenPoint.mapPoint,
-                        scale: 564
-                    });
-                    mapView.goTo(vpoint);
-                    console.log(comName + " - " + slideIndex[comName])
-                        //alert(graphic.attributes.CommonName);
+                    //alert(graphic.attributes.CommonName);
                 });
         });
+
         $(window).resize(function() {
             $(".swiper-slide").width($(".swiper-slide").height() * 1.33);
             $("#mapView").css("bottom", $(".swiper-container").height());
