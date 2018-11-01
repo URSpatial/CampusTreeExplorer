@@ -15,7 +15,7 @@ require([
         "esri/geometry/SpatialReference",
         "esri/widgets/BasemapToggle",
         "esri/widgets/Home",
-        "esri/widgets/Track",
+        "esri/widgets/Locate",
         "esri/layers/GraphicsLayer",
         "esri/Graphic",
         "esri/geometry/Point",
@@ -27,7 +27,7 @@ require([
         "dojo/domReady!"
     ],
 
-    function(Map, Basemap, MapView, FeatureLayer, Extent, SpatialReference, BasemapToggle, Home, Track, GraphicsLayer, Graphic, Point, SimpleMarkerSymbol, Viewpoint, QueryTask, Query, TileLayer) {
+    function(Map, Basemap, MapView, FeatureLayer, Extent, SpatialReference, BasemapToggle, Home, Locate, GraphicsLayer, Graphic, Point, SimpleMarkerSymbol, Viewpoint, QueryTask, Query, TileLayer) {
 
         // new $.fn.dataTable.FixedHeader( table );
         $("#mapView").css("bottom", $(".swiper-container").height())
@@ -119,10 +119,13 @@ require([
 
         // Add the home button to the top left corner of the view
         mapView.ui.add(homeBtn, "top-left");
-        var track = new Track({
-            view: mapView
+        var locateBtn = new Locate({
+            view: mapView,
+            scale: 5000
         });
-        mapView.ui.add(track, "top-left");
+        mapView.ui.add(locateBtn, {
+            position: "top-left"
+        });
         mapView.on("click", function(event) {
             mapView.hitTest(event)
                 .then(function(response) {
