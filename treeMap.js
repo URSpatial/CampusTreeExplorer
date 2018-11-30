@@ -314,14 +314,14 @@ require([
         function selectSpecies(sciName, comName, zoom = true) {
             $(".selected").removeClass("selected");
             $(".swiper-slide[data-comName='" + comName + "']").addClass("selected");
-            mySwiper.stopAutoplay();
+            mySwiper.autoplay.stop();
             fillInfo(sciName, comName);
 
             showInfoPanel();
             if (timeoutID != null || typeof(timeoutID) != "undefined") {
                 window.clearTimeout(timeoutID);
             }
-            timeoutID = window.setTimeout(function() { mySwiper.startAutoplay(); }, 10000)
+            timeoutID = window.setTimeout(function() { mySwiper.autoplay.start(); }, 10000)
 
             //alert(sciName);
             var query = treeLayer.createQuery();
